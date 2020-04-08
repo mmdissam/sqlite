@@ -5,7 +5,7 @@ class User {
   String _city;
   int _age;
 
-  User(this._id, this._userName, this._password, this._city, this._age);
+  User(this._userName, this._password, this._city, this._age);
 
 // To arrived each element with a value
   User.map(dynamic obj) {

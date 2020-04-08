@@ -75,4 +75,19 @@ class DatabaseHelper {
 //  result.first TO arrange the values
     return new User.fromMap(result.first);
   }
+
+  Future<int> deleteUser(int id) async {
+    var dbClient = await db;
+    return await dbClient.delete(userTable, where: "$columnId = ?", whereArgs: [id]);
+  }
+
+  Future<int> update(User user) async {
+    var dbClient = await db;
+    return await dbClient.update(userTable, user.toMap(),where: "$columnId = ?" , whereArgs: [user.id] );
+  }
+
+  Future<void> close() async{
+    var dbClient = await db;
+    return await dbClient.close();
+  }
 }
