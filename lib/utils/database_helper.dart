@@ -35,16 +35,44 @@ class DatabaseHelper {
   }
 
   // When creating the db, create the table
-  _onCreate (Database db,int newVersion) async{
-    var sql = "CREATE TABLE $userTable ($columnId INTEGER PRIMARY KEY, $columnUserName TEXT,$columnPassword TEXT,$columnCity TEXT, $columnAge INTEGER)";
+  _onCreate(Database db, int newVersion) async {
+    var sql =
+        "CREATE TABLE $userTable ($columnId INTEGER PRIMARY KEY, $columnUserName TEXT,$columnPassword TEXT,$columnCity TEXT, $columnAge INTEGER)";
     await db.execute(sql);
   }
 
 //  To write on database
-  Future<int> saveUser (User user) async{
+  Future<int> saveUser(User user) async {
+//  To initialize database
     var dbClient = await db;
     int result = await dbClient.insert("$userTable", user.toMap());
     return result;
   }
 
+  Future<List> getAllUsers() async {
+    //  To initialize database
+    var dbClient = await db;
+    var sql = "SELECT * FROM $userTable";
+    List result = await dbClient.rawQuery(sql);
+    return result.toList();
+  }
+
+  Future<int> getNumOfUser() async {
+    //  To initialize database
+    var dbClient = await db;
+    var sql = "SELECT COUNT(*) FROM $userTable";
+    return Sqflite.firstIntValue(await dbClient.rawQuery(sql));
+  }
+
+  Future<User> getUser(int id) async {
+    var dbClient = await db;
+    var sql = "SELECT * $userTable WHERE $columnId = $id";
+    List result = await dbClient.rawQuery(sql);
+//   If user not found
+    if (result.length == 0) {
+      return null;
+    }
+//  result.first TO arrange the values
+    return new User.fromMap(result.first);
+  }
 }
