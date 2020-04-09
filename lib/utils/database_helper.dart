@@ -42,7 +42,7 @@ class DatabaseHelper {
   }
 
 //  To write on database
-  Future<int> saveUser(User user) async {
+  Future<int> addUser(User user) async {
 //  To initialize database
     var dbClient = await db;
     int result = await dbClient.insert("$userTable", user.toMap());

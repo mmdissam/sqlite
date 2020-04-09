@@ -11,20 +11,23 @@ void main() async {
 
   var db = new DatabaseHelper();
 
-  User a1 = User.fromMap({
-    "id": 1,
-    "userName": 'A1',
-    "password": '999',
-    "city": 'safad',
-    "age": 25
-  });
+//  await db.addUser(User('A3', '125', 'Rafah', 50));
+
+ /* User a1 = User.fromMap({
+    "id": 5,
+    "userName": 'A3',
+    "password": '125',
+    "city": 'Rafah',
+    "age": 50
+  });*/
+
 //  await db.update(a1);
-  await db.deleteUser(3);
+
   myUsers = await db.getAllUsers();
   for (int i = 0; i < myUsers.length; i++) {
     User user = User.map(myUsers[i]);
     print(
-      sprintf("ID: %s - Username: %s - Password: %s - City: %-10s - Age: %s",
+      sprintf("ID: %d - Username: %s - Password: %s - City: %-7s - Age: %d",
           [user.id, user.userName, user.password, user.city, user.age]),
     );
   }
@@ -44,6 +47,20 @@ class Home extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.cyan,
       ),
+      body: ListView.builder(
+        itemCount: myUsers.length,
+          itemBuilder: ( BuildContext context ,int position) {
+          return Card(
+            color: Colors.deepOrangeAccent,
+            elevation: 4,
+            child: ListTile(
+              title: Text('${User.fromMap(myUsers[position]).userName}'),
+              subtitle: Text('${User.fromMap(myUsers[position]).city}'),
+              leading: Icon(Icons.person),
+              onTap: () => debugPrint('${User.fromMap(myUsers[position]).age}'),
+            ),
+          );
+          }),
     );
   }
 }
