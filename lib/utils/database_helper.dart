@@ -3,7 +3,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'dart:io';
 import 'dart:async';
-
 import 'package:sqlite/models/user.dart';
 
 class DatabaseHelper {
@@ -32,6 +31,7 @@ class DatabaseHelper {
     // (documentDirectory.path): example: C:/IUG/Database
     String path = join(documentDirectory.path, 'mydb.db');
     var myOwnDB = await openDatabase(path, version: 1, onCreate: _onCreate);
+    return myOwnDB;
   }
 
   // When creating the db, create the table
@@ -66,7 +66,7 @@ class DatabaseHelper {
 
   Future<User> getUser(int id) async {
     var dbClient = await db;
-    var sql = "SELECT * $userTable WHERE $columnId = $id";
+    var sql = "SELECT * FROM $userTable WHERE $columnId = $id";
     List result = await dbClient.rawQuery(sql);
 //   If user not found
     if (result.length == 0) {
@@ -78,15 +78,17 @@ class DatabaseHelper {
 
   Future<int> deleteUser(int id) async {
     var dbClient = await db;
-    return await dbClient.delete(userTable, where: "$columnId = ?", whereArgs: [id]);
+    return await dbClient
+        .delete(userTable, where: "$columnId = ?", whereArgs: [id]);
   }
 
   Future<int> update(User user) async {
     var dbClient = await db;
-    return await dbClient.update(userTable, user.toMap(),where: "$columnId = ?" , whereArgs: [user.id] );
+    return await dbClient.update(userTable, user.toMap(),
+        where: "$columnId = ?", whereArgs: [user.id]);
   }
 
-  Future<void> close() async{
+  Future<void> close() async {
     var dbClient = await db;
     return await dbClient.close();
   }
